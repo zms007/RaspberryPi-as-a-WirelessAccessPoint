@@ -187,9 +187,44 @@ Finally, press Ctrl + X to exit, then Y to save, and Enter to confirm.
 
 With this step completed, your Raspberry Pi will forward network traffic properly when it boots up.
 
+Step 8: Enable Internet Connection Sharing
+-----
+At this stage, your Raspberry Pi can act as a wireless access point that other devices can connect to. However, these devices still can't access the internet through the Pi yet. To allow internet access, we need to create a network bridge that will pass all traffic between the wlan0 (Wi-Fi) and eth0 (Ethernet) interfaces.
 
+To create this bridge, first install the required package:
 
+sudo apt-get install bridge-utils  
 
+Once installed, let’s create a new bridge called br0 by typing:
 
+sudo brctl addbr br0  
 
+After that, link the eth0 interface to the bridge:
 
+sudo brctl addif br0 eth0  
+
+Next, we need to configure the bridge settings. Open the /etc/network/interfaces file:
+
+sudo nano /etc/network/interfaces  
+
+At the end of the file, add these lines:
+
+auto br0  
+iface br0 inet manual  
+bridge_ports eth0 wlan0  
+
+These settings will connect both Ethernet and Wi-Fi interfaces to the same network bridge, allowing traffic to flow between them.
+
+Once added, press Ctrl + X to exit, then Y to save, and Enter to confirm.
+
+Now, when devices connect to the Raspberry Pi's Wi-Fi, they will be able to access the internet using the Pi’s Ethernet connection.
+
+Step 9: Reboot the Raspberry Pi
+-----
+Once everything is set up, it’s time to restart your Raspberry Pi to apply all the configurations. You can reboot by typing this command:
+
+sudo reboot 
+
+After the reboot, your Raspberry Pi should now function as a wireless access point. You can test it by using another device, such as a laptop or smartphone, and searching for the Wi-Fi network name (SSID) that you created earlier in Step 5.
+
+If everything is correct, you should be able to connect to the Raspberry Pi's Wi-Fi and access the internet!
