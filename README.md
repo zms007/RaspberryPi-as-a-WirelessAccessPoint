@@ -90,6 +90,53 @@ After adding these lines, press Ctrl + X to exit, then Y to save, and Enter to c
 
 Your DHCP server is now ready to hand out IP addresses to connected devices.
 
+Step 5: Set Up the Access Point Software (hostapd)
+-----
+Now it’s time to configure hostapd, the software that will turn your Raspberry Pi into a wireless access point. First, let’s create and edit the hostapd configuration file. Open the file by typing:
+
+sudo nano /etc/hostapd/hostapd.conf  
+
+This will open a new file. In this file, type the following settings:
+
+interface=wlan0  
+bridge=br0  
+hw_mode=g  
+channel=7  
+wmm_enabled=0  
+macaddr_acl=0  
+auth_algs=1  
+ignore_broadcast_ssid=0  
+wpa=2  
+wpa_key_mgmt=WPA-PSK  
+wpa_pairwise=TKIP  
+rsn_pairwise=CCMP  
+ssid=NETWORK  
+wpa_passphrase=PASSWORD  
+
+⚙️ Note: Replace NETWORK with your desired Wi-Fi name and PASSWORD with a strong password. These will be used to connect devices to your Raspberry Pi’s wireless network.
+
+After entering the settings, press Ctrl + X to exit, then press Y to save, and Enter to confirm.
+
+Link hostapd to its Configuration File
+Next, we need to tell the system where to find this hostapd configuration file. To do this, open the hostapd default settings file:
+
+sudo nano /etc/default/hostapd 
+
+Look for this line:
+
+#DAEMON_CONF=""
+
+Remove the # at the beginning to uncomment the line, and add the path to the config file, so it looks like this:
+
+DAEMON_CONF="/etc/hostapd/hostapd.conf"  
+
+By removing the #, you activate this line and correctly link hostapd to the config file we just created.
+
+Once done, press Ctrl + X, then Y, and Enter to save and exit.
+
+Now hostapd knows where to find its settings when we start the service!
+
+
 
 
 
