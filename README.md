@@ -136,7 +136,56 @@ Once done, press Ctrl + X, then Y, and Enter to save and exit.
 
 Now hostapd knows where to find its settings when we start the service!
 
+Step 6: Enable Traffic Forwarding
+-----
+In this step, we will set up traffic forwarding so that any device connected to your Raspberry Pi's Wi-Fi can access the internet through the Ethernet connection. This means that the wlan0 interface (Wi-Fi) will forward traffic through the Ethernet cable connected to your modem or router.
 
+To do this, we need to edit a system configuration file. Open the sysctl.conf file using this command:
+
+sudo nano /etc/sysctl.conf  
+
+Inside the file, look for this line:
+
+#net.ipv4.ip_forward=1  
+
+Remove the # at the beginning of the line so that it becomes:
+
+net.ipv4.ip_forward=1  
+
+This change will enable IP forwarding, allowing the Raspberry Pi to pass network traffic between interfaces.
+
+Once done, press Ctrl + X to exit, then Y to save, and Enter to confirm.
+
+Now, your Raspberry Pi is ready to forward traffic from Wi-Fi to Ethernet.
+
+Step 7: Add IP Masquerading with iptables
+-----
+Now, we will configure iptables to enable IP masquerading, which allows devices connected to your Raspberry Pi's Wi-Fi to share the Ethernet connection for internet access.
+
+First, enter this command to add the masquerade rule for outbound traffic on eth0 (Ethernet):
+
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE  
+
+Next, save this iptables rule so that it remains active after reboot:
+
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"  
+
+To make sure this rule loads automatically every time the Raspberry Pi starts, we need to edit the /etc/rc.local file. Open the file with:
+
+sudo nano /etc/rc.local  
+
+Before the line that says exit 0, add this line:
+
+iptables-restore < /etc/iptables.ipv4.nat  
+
+So, it will look something like this:
+
+iptables-restore < /etc/iptables.ipv4.nat  
+exit 0  
+
+Finally, press Ctrl + X to exit, then Y to save, and Enter to confirm.
+
+With this step completed, your Raspberry Pi will forward network traffic properly when it boots up.
 
 
 
