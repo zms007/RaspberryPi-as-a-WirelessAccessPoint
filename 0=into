@@ -1,0 +1,4 @@
+In this project, your Raspberry Pi will be connected to the internet via RJ45 network cable. 
+Turn your Raspberry Pi into a wireless access point, you can make it act as a router. 
+Use Raspbian and install several packages that gives the Pi the ability to do router-like things such as assign IP addresses to devices that connect to it. 
+Configure the your tablet so that it can surf the internet through your Raspberry Pi wireless access point. 
